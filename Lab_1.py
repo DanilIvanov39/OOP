@@ -8,9 +8,15 @@ class Integral:
         self.end = end
 
 class Sym(Integral):
-    def Calc(self):
-        return (self.end - self.start) * (self.function(self.end) + self.function(self.start)
-                                          + 4 * self.function((self.end + self.start) / 2)) / 6
+    def Calc(self, n=100):
+        h = (self.end - self.start) / n
+        result = self.function(self.start) + self.function(self.end)
+
+        for i in range(1, n):
+            x_i = self.start + i * h
+            result += 4 * self.function(x_i) if i % 2 == 1 else 2 * self.function(x_i)
+
+        return h * result / 3
 
 class Trap(Integral):
     def Calc(self):
