@@ -1,47 +1,55 @@
 class Array3d:
     def __init__(self, dim0, dim1, dim2):
-        self.dim0 = dim0   #ширина
-        self.dim1 = dim1   #высота
-        self.dim2 = dim2   #глубина
+        self.__dim0 = dim0   #ширина
+        self.__dim1 = dim1   #высота
+        self.__dim2 = dim2   #глубина
         self.length = dim0*dim1*dim2
         self.arr = [0]*self.length
 
     def __str__(self):  # Преобразовываем написание массива
         result = ""
-        for i in range(self.dim0):
+        for i in range(self.__dim0):
             result += f"Глубина: {i}\n"
-            for j in range(self.dim1):
-                for k in range(self.dim2):
+            for j in range(self.__dim1):
+                for k in range(self.__dim2):
                     result += f"{self.arr[self.transform_index(i, j, k)]} "
                 result += "\n"
             result += "\n"
         return result
 
+    def __getitem__(self, idx):
+        i, j, k = idx
+        return self.arr[i * self.__dim1 * self.__dim2 + j * self.__dim2 + k]
+
+    def __setitem__(self, idx, value):
+        i, j, k = idx
+        self.arr[i * self.__dim1 * self.__dim2 + j * self.__dim2 + k] = value
+
     def transform_index(self, i, j, k):
-        return i + self.dim0 * (j + self.dim1 * k)  #перевод индекса
+        return i + self.__dim0 * (j + self.__dim1 * k)  #перевод индекса
 
     def GetValues1(self, i):  # Получаем срез по первому приближению = двумерный массив
         result = ""
-        for j in range(self.dim1):
+        for j in range(self.__dim1):
             result += "\n"
-            for k in range(self.dim2):
+            for k in range(self.__dim2):
                 result += f"{self.arr[self.transform_index(i, j, k)]} "
         return result
 
     def GetValues2(self, i, j):  # Получаем срез по второму приближению = одномерный массив
         result = ""
-        for k in range(self.dim2):
+        for k in range(self.__dim2):
             result += f"{self.arr[self.transform_index(i, j, k)]} "
         return result
 
     def SetValues1(self, i, array):  # Устанавливаем значение в массиве для заданной одной координаты (ставим необходимый двумерный массив)
-        for k in range(self.dim2):
-            for j in range(self.dim1):
+        for k in range(self.__dim2):
+            for j in range(self.__dim1):
                 self.arr[self.transform_index(i, j, k)] = array[k][j]
         return self.arr
 
     def SetValues2(self, i, j, array):  # Устанавливаем значение в массиве для заданных двух координат (ставим необходимый одномерный массив)
-        for k in range(self.dim2):
+        for k in range(self.__dim2):
             self.arr[self.transform_index(i, j, k)] = array[k]
         return self.arr
 
@@ -66,3 +74,7 @@ if __name__ == '__main__':
 
     print(array.GetValues2(0, 2))
     print(array)
+    print(array[1, 0, 1])
+    print(array[0, 0, 0])
+    array[0, 0, 0] = 7
+    print(array[0, 0, 0])
