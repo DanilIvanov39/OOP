@@ -59,7 +59,7 @@ class VirtualKeyboard:
                 self.add_character(event.name)
             elif event.event_type == keyboard.KEY_UP:
                 self.undo_action()
-                
+
     def create_keyboard_buttons(self):
         # Создаем кнопки клавиатуры согласно раскладке
         keyboard_layout = ['1234567890', 'QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM']
@@ -80,7 +80,7 @@ class VirtualKeyboard:
             elif char == '1':
                 self.text.set(self.text.get() + '1' + char)
                 self.pending_1 = False
-                self.history.append(char)
+                self.history.append('&')
             else:
                 self.text.set(self.text.get() + char)
                 self.pending_1 = False
@@ -95,9 +95,8 @@ class VirtualKeyboard:
     def undo_action(self):
         if self.history:
             current_text = self.text.get()
-            counter = self.history.count('1')
             last_char = self.history.pop()
-            if last_char == '1' and self.history[-1] == '1' and counter % 2 == 0:
+            if last_char == '&':
                 self.text.set(current_text[:-2])
                 self.pending_1 = False
             else:
@@ -118,6 +117,6 @@ def simulate_typing(keyboard, text_to_type):
 if __name__ == "__main__":
     root = tk.Tk()  # Создаем главное окно
     keyboard_app = VirtualKeyboard(root)  # Создаем экземпляр виртуальной клавиатуры
-    simulation_thread = Thread(target=simulate_typing, args=(keyboard_app, "Hello, World!"))  # Создаем поток для симуляции ввода текста
+    simulation_thread = Thread(target=simulate_typing, args=(keyboard_app, "Hello!"))  # Создаем поток для симуляции ввода текста
     simulation_thread.start()  # Запускаем поток симуляции
     keyboard_app.run()  # Запускаем приложение виртуальной клавиатуры
