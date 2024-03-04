@@ -3,34 +3,6 @@ from threading import Thread  # Импортируем класс Thread из м
 import keyboard  # Импортируем модуль keyboard
 
 
-class Command:
-    def execute(self):
-        pass  # Пустая реализация метода execute
-
-    def undo(self):
-        pass  # Пустая реализация метода undo
-#Пустая реализация методов в классе Command делается с
-#целью создания базового класса для команд, которые могут быть выполнены и отменены. Это обеспечивает общий интерфейс для всех команд.
-
-
-class LaunchBrowserCommand(Command):
-    def execute(self):
-        print("Launching browser")  # Выводим сообщение о запуске браузера    # Выводим сообщение о закрытии браузера
-#Это делается для того, чтобы классы, которые наследуются от класса Command,
-# могли предоставить свои собственные реализации этих методов в соответствии с их конкретными потребностями.
-
-
-class Key:
-    def __init__(self, command):
-        self.command = command  # Инициализируем команду, связанную с клавишей
-
-    def press(self):
-        self.command.execute()  # Выполняем команду при нажатии клавиши
-
-    def release(self):
-        self.command.undo()  # Отменяем выполнение команды при отпускании клавиши
-
-
 class VirtualKeyboard:
     def __init__(self, root):
         self.root = root  # Инициализируем главное окно
@@ -59,7 +31,7 @@ class VirtualKeyboard:
                 self.add_character(event.name)
             elif event.event_type == keyboard.KEY_UP:
                 self.undo_action()
-
+                
     def create_keyboard_buttons(self):
         # Создаем кнопки клавиатуры согласно раскладке
         keyboard_layout = ['1234567890', 'QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM']
@@ -67,10 +39,10 @@ class VirtualKeyboard:
             row_frame = tk.Frame(self.button_frame)  # Создаем фрейм для строки кнопок
             row_frame.pack()  # Размещаем фрейм на окне
             for char in row:
-                command = Key(LaunchBrowserCommand())  # Создаем экземпляр класса Key с командой LaunchBrowserCommand
                 button = tk.Button(row_frame, text=char, command=lambda c=char: self.add_character(c))  # Создаем кнопку
                 button.pack(side=tk.LEFT)  # Размещаем кнопку на фрейме
-
+                
+                
     def add_character(self, char): # char это клавиша
         if self.pending_1:
             if char == '2':
@@ -120,3 +92,4 @@ if __name__ == "__main__":
     simulation_thread = Thread(target=simulate_typing, args=(keyboard_app, "Hello!"))  # Создаем поток для симуляции ввода текста
     simulation_thread.start()  # Запускаем поток симуляции
     keyboard_app.run()  # Запускаем приложение виртуальной клавиатуры
+    
